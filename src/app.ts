@@ -4,11 +4,11 @@ import { config } from "dotenv";
 
 export const app = express();
 
-console.log("");
-
 config({
   path: "./src/.env",
 });
+//using middleware
 app.use(express.json()); //middleware that help to access json data on server
 
+//using routes
 app.use("/users", userRouter);

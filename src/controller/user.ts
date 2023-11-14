@@ -1,92 +1,49 @@
 import { NextFunction, Request, Response } from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { UserModal } from "../models/index.js";
+import { setCookie } from "../utils/index.js";
 
-export const getAllUser = async (req: Request, res: Response) => {
-  const users = await UserModal.find({});
-  const { category } = req.query;
-  console.log(category);
-  res.json({
-    success: true,
-    users: {
-      users,
-    },
-  });
-};
+export const getAllUser = async (req: Request, res: Response) => {};
 
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
-  await UserModal.create({
+  let user = await UserModal.findOne({ email });
+  if (user)
+    return res.status(404).json({
+      success: false,
+      message: "User already exists",
+    });
+  const hassedPassword = await bcrypt.hash(password, 10);
+  user = await UserModal.create({
     name,
     email,
-    password,
+    password: hassedPassword,
   });
-  res.status(201).cookie("sdsd", "lol").json({
-    success: true,
-    message: "Signed up successfully",
-  });
+  setCookie(res, user._id as string, "Registerd Successfully", 201);
 };
 
 export const login = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {};
-
-export const getUserDetail = async (req: Request, res: Response) => {
-  const { userId } = req.params;
-  const data = await UserModal.findById(userId);
-  res.status(201).json({
-    success: true,
-    user: data,
-  });
-};
-
-export const editUser = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const { name, email } = req.body;
-
-    const updatedUser = await UserModal.findOneAndUpdate(
-      { _id: userId },
-      { $set: { name, email } },
-      { new: true } // Returns the modified document rather than the original
-    );
-
-    if (!updatedUser) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    res.json({
-      success: true,
-      user: updatedUser,
-      message: "User updated successfully",
+) => {
+  const { email, password } = req.body;
+  const user = await UserModal.findOne({ email }).select("+password");
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "Invalid email or password",
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Internal Server Error" });
   }
+  const isMatched = await bcrypt.compare(password, user.password);
+  if (!isMatched) {
+    return res.status(404).json({
+      success: false,
+      message: "Invalid email or password",
+    });
+  }
+  setCookie(res, user?._id as string, `Welcome back ${user?.name}`);
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
-    const findUser = await UserModal.findById(userId);
-    if (findUser) {
-      await UserModal.deleteOne({ _id: userId });
-      res.json({
-        success: true,
-        message: "User deleted successfully",
-      });
-    } else {
-      res.json({
-        success: false,
-        message: "User not found",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ sucess: false, message: "Internal Server Error" });
-  }
-};
+export const getUserDetail = async (req: Request, res: Response) => {};

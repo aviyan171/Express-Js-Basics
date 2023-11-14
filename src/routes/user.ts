@@ -1,10 +1,9 @@
 import express from "express";
 import {
   registerUser,
-  deleteUser,
-  editUser,
   getAllUser,
   getUserDetail,
+  login,
 } from "../controller/user.js";
 
 const router = express.Router();
@@ -13,6 +12,8 @@ router.get("/all", getAllUser);
 
 router.post("/create", registerUser);
 
+router.post("/login", login);
+
 //always try to keep dynamic route atb last
-router.route("/:userId").get(getUserDetail).put(editUser).delete(deleteUser);
+router.route("/:userId").get(getUserDetail);
 export default router;
