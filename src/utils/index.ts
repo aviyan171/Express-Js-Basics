@@ -10,3 +10,10 @@ export const connectDB = async () => {
     console.log(error);
   }
 };
+
+export const createModal = (
+  collectionName: string,
+  schemaName: mongoose.Schema
+) => {
+  return mongoose.model(collectionName, schemaName);
+};

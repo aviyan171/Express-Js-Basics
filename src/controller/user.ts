@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { UserModal } from "../models/index.js";
 
 export const getAllUser = async (req: Request, res: Response) => {
@@ -13,7 +13,7 @@ export const getAllUser = async (req: Request, res: Response) => {
   });
 };
 
-export const createUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
   await UserModal.create({
     name,
@@ -25,6 +25,12 @@ export const createUser = async (req: Request, res: Response) => {
     message: "Signed up successfully",
   });
 };
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {};
 
 export const getUserDetail = async (req: Request, res: Response) => {
   const { userId } = req.params;
