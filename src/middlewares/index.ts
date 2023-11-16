@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { errorResponse } from "../constants/index.js";
 import { decodeJWT } from "../utils/index.js";
+import { UserModal } from "../models/index.js";
 
-export const isAuthenticated = (
-  req: Request,
+export const isAuthenticated = async (
+  req: any,
   res: Response,
   next: NextFunction
 ) => {
@@ -12,7 +13,7 @@ export const isAuthenticated = (
     return errorResponse(res, "You are not authenticated, Please login first");
   }
   const decodedJwt = decodeJWT(token);
-  if (decodedJwt) {
-    next();
-  }
+  const userDetails = await UserModal.findById(decodedJwt);
+  req.user = userDetails;
+  next();
 };

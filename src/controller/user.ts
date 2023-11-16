@@ -51,19 +51,9 @@ export const login = async (
   setCookie(res, user?._id as string, `Welcome back ${user?.name}`);
 };
 
-export const getUserDetail = async (req: Request, res: Response) => {
+export const getUserDetail = async (req: any, res: Response) => {
   try {
-    const { token } = req.cookies;
-    const decodedJwt = decodeJWT(token);
-    const userDetails = await UserModal.findById(decodedJwt);
-    if (userDetails) {
-      successResponse(
-        res,
-        "User detail  feteched Successfully",
-        200,
-        userDetails
-      );
-    }
+    successResponse(res, "User detail  feteched Successfully", 200, req.user);
   } catch (error) {
     res.json({
       success: false,
