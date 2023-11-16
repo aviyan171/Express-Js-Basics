@@ -1,6 +1,7 @@
 import express from "express";
 import userRouter from "./routes/user.js";
 import { config } from "dotenv";
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
@@ -9,6 +10,7 @@ config({
 });
 //using middleware
 app.use(express.json()); //middleware that help to access json data on server
+app.use(cookieParser());
 
 //using routes
 app.use("/users", userRouter);

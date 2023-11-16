@@ -38,3 +38,7 @@ export const setCookie = (
       message,
     });
 };
+
+export const decodeJWT = (token: string) => {
+  return jwt.verify(token, process.env.JWT_SECRET!);
+};
