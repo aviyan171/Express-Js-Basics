@@ -1,9 +1,19 @@
 import { isAuthenticated } from "./../middlewares/index.js";
 import express from "express";
-import { newTask } from "../controller/task.js";
+import {
+  deleteTasks,
+  myTasks,
+  newTask,
+  updateTasks,
+} from "../controller/task.js";
 
 const router = express.Router();
 
 router.post("/new", isAuthenticated, newTask);
+router.get("/my-tasks", isAuthenticated, myTasks);
+router
+  .route("/:taskId")
+  .put(isAuthenticated, updateTasks)
+  .delete(isAuthenticated, deleteTasks);
 
 export default router;
