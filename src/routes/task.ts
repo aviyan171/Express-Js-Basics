@@ -1,4 +1,3 @@
-import { isAuthenticated } from "./../middlewares/index.js";
 import express from "express";
 import {
   deleteTasks,
@@ -6,6 +5,7 @@ import {
   newTask,
   updateTasks,
 } from "../controller/task.js";
+import { isAuthenticated } from "./../middlewares/index.js";
 
 const router = express.Router();
 

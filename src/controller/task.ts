@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { TaskModal as Task } from "../models/index.js";
 import { errorResponse, successResponse } from "../constants/index.js";
+import { TaskModal as Task } from "../models/index.js";
 
 export const newTask = async (req: any, res: Response) => {
   const { title, description } = req.body;

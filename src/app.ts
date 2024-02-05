@@ -1,9 +1,9 @@
-import express from "express";
-import userRouter from "./routes/user.js";
-import taskRouter from "./routes/task.js";
-import { config } from "dotenv";
 import cookieParser from "cookie-parser";
+import { config } from "dotenv";
+import express from "express";
 import { errorResponse } from "./constants/index.js";
+import taskRouter from "./routes/task.js";
+import userRouter from "./routes/user.js";
 
 export const app = express();
 
